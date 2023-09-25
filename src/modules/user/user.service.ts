@@ -51,7 +51,9 @@ export class UserService {
       throw new NotFoundException(
         `User ${updateUserDto.username} already exists`,
       );
-    return await this.userRepository.update(id, updateUserDto);
+     await this.userRepository.update(id, updateUserDto);
+
+     return user;
   }
 
   async remove(id: number) {
