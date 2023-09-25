@@ -15,4 +15,8 @@ export class CreateProductDto {
   
   @IsString()
   detail:string
+  
+  @IsString()
+  @IsNotEmpty()
+  role:string
 }

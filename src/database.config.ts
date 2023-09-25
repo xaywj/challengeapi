@@ -1,12 +1,13 @@
-import { TypeOrmModuleOptions } from '@nestjs/typeorm';
+import { TypeOrmModuleOptions } from '@nestjs/typeorm'; 
+import { configdb } from './config/database';
 
 const configdatabase: TypeOrmModuleOptions = {
   type: 'mysql',
-  host: 'localhost',
-  port: 3306,
-  username: 'root',
-  password: '',
-  database: 'challenge_db',
+  host: configdb.host,
+  port: configdb.port,
+  username: configdb.db_user,
+  password: configdb.db_password,
+  database: configdb.db_name,
   entities: [__dirname + '/**/*.entity{.ts,.js}'],
   synchronize: true,
 };
