@@ -11,6 +11,9 @@ export class User {
   @Column()
   phone: string;
 
+  @Column()
+  role: string;
+
   @Column({ unique: true, type: 'varchar', length: 255 })
   username: string;
 
