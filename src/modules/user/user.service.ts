@@ -1,9 +1,10 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { Repository } from 'typeorm';
 import { User } from './entities/user.entity';
 import { InjectRepository } from '@nestjs/typeorm';
+import * as bcrypt from 'bcrypt';
 
 @Injectable()
 export class UserService {
@@ -12,7 +13,19 @@ export class UserService {
     private userRepository: Repository<User>,
   ) {}
 
-  create(createUserDto: CreateUserDto) {}
+  async create(createUserDto: CreateUserDto) {
+    const user = await this.userRepository.findOneBy({
+      username: createUserDto.username,
+    });
+    if (user)
+      throw new NotFoundException(
+        `User ${createUserDto.username} already exists`,
+      );
+    return await this.userRepository.save({
+      ...createUserDto,
+      password: await bcrypt.hash(createUserDto.password, 10),
+    });
+  }
 
   findAll() {
     return `This action returns all user`;
