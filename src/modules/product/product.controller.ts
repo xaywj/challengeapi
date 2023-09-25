@@ -20,7 +20,7 @@ export class ProductController {
   @Post()
   create(@Req() req: any, @Body() createProductDto: CreateProductDto) {
     if (createProductDto.detail)
-      if (req.role != 'admin')
+      if (req.user.role != 'admin')
         throw new NotAcceptableException(
           'You are not allowed to do this action',
         );
@@ -43,14 +43,14 @@ export class ProductController {
     @Param('id') id: string,
     @Body() updateProductDto: UpdateProductDto,
   ) {
-    if (req.role != 'admin')
+    if (req.user.role != 'admin')
       throw new NotAcceptableException('You are not allowed to do this action');
     return this.productService.update(+id, updateProductDto);
   }
 
   @Delete(':id')
   remove(@Req() req: any, @Param('id') id: string) {
-    if (req.role != 'admin')
+    if (req.user.role != 'admin')
       throw new NotAcceptableException('You are not allowed to do this action');
     return this.productService.remove(+id);
   }
