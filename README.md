@@ -62,5 +62,8 @@ $ npm run test:cov
  ## query use typeorm
  ## Used Package Validator
  ## login Authentication use Jwt Ganerate token
- ## role login admin, user
+ ## role login  admin, user
+ ## database_name challenge_db
+
+ ## create create user field role should be admin, user role admin access all, role user can access for view only
  
