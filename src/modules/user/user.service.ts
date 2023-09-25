@@ -31,17 +31,34 @@ export class UserService {
     return await this.userRepository.find();
   }
 
-  async findOne(id: number) { 
+  async findOne(id: number) {
     const user = await this.userRepository.findOneBy({ id: id });
     if (!user) throw new NotFoundException(`User #${id} not found`);
     return user;
   }
 
-  update(id: number, updateUserDto: UpdateUserDto) {
-    return `This action updates a #${id} user`;
+  async update(id: number, updateUserDto: UpdateUserDto) {
+    // check if the user id exists in the table
+    const user = await this.userRepository.findOneBy({ id: id });
+    if (!user) throw new NotFoundException(`User #${id} not found`);
+
+    // check if the username deference this id already exists in the table
+    const username = await this.userRepository.findOneBy({
+      username: updateUserDto.username,
+    });
+
+    if (username && username.id != id)
+      throw new NotFoundException(
+        `User ${updateUserDto.username} already exists`,
+      );
+    return await this.userRepository.update(id, updateUserDto);
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} user`;
+  async remove(id: number) {
+    // check if the user id exists in the table
+    const user = await this.userRepository.findOneBy({ id: id });
+    if (!user) throw new NotFoundException(`User #${id} not found`);
+    await this.userRepository.delete(id);
+    return true;
   }
 }
