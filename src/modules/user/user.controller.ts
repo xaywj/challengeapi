@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Req, NotAcceptableException } from '@nestjs/common';
 import { UserService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
@@ -8,12 +8,14 @@ export class UserController {
   constructor(private readonly userService: UserService) {}
 
   @Post()
-  create(@Body() createUserDto: CreateUserDto) {
+  create(@Req() req: any, @Body() createUserDto: CreateUserDto) {
+    // admin only
+    if(req.role != 'admin') throw new NotAcceptableException('You are not allowed to do this action');
     return this.userService.create(createUserDto);
   }
 
   @Get()
-  findAll() {
+  findAll(@Req() req: any) {  
     return this.userService.findAll();
   }
 
@@ -23,12 +25,15 @@ export class UserController {
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
+  update(@Req() req: any, @Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
+    // admin only
+    if(req.role != 'admin') throw new NotAcceptableException('You are not allowed to do this action');
     return this.userService.update(+id, updateUserDto);
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
+  remove(@Req() req: any, @Param('id') id: string) {
+    if(req.role != 'admin') throw new NotAcceptableException('You are not allowed to do this action');
     return this.userService.remove(+id);
   }
 }

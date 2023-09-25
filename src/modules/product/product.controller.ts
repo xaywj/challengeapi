@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Req, NotAcceptableException } from '@nestjs/common';
 import { ProductService } from './product.service';
 import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
@@ -8,7 +8,8 @@ export class ProductController {
   constructor(private readonly productService: ProductService) {}
 
   @Post()
-  create(@Body() createProductDto: CreateProductDto) {
+  create(@Req() req:any, @Body() createProductDto: CreateProductDto) {
+    if(req.role != 'admin') throw new NotAcceptableException('You are not allowed to do this action');
     return this.productService.create(createProductDto);
   }
 
@@ -23,12 +24,14 @@ export class ProductController {
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateProductDto: UpdateProductDto) {
+  update(@Req() req:any, @Param('id') id: string, @Body() updateProductDto: UpdateProductDto) {
+    if(req.role != 'admin') throw new NotAcceptableException('You are not allowed to do this action');
     return this.productService.update(+id, updateProductDto);
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
+  remove(@Req() req:any, @Param('id') id: string) {
+    if(req.role != 'admin') throw new NotAcceptableException('You are not allowed to do this action');
     return this.productService.remove(+id);
   }
 }
