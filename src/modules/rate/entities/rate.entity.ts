@@ -6,7 +6,7 @@ export class Rate {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column()
+  @Column({ unique: true, type: 'varchar', length: 255})
   name: string;
 
   @Column({ type: 'float' })
