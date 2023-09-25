@@ -23,11 +23,18 @@ export class RateService {
   }
 
   async findAll() {
-    return await this.ratesRepository.find();
+    return await this.ratesRepository
+      .createQueryBuilder('rate')
+      .leftJoinAndSelect('rate.product', 'product')
+      .getMany();
   }
 
   async findOne(id: number) {
-    return await this.ratesRepository.findOneBy({ id: id });
+    return await this.ratesRepository
+    .createQueryBuilder('rate')
+    .leftJoinAndSelect('rate.product', 'product')
+    .where('rate.id = :id', { id: id })
+    .getOne();
   }
 
   async update(id: number, updateRateDto: UpdateRateDto) {
@@ -41,8 +48,8 @@ export class RateService {
     if (name && name.id != id)
       throw new NotFoundException(`Rate ${updateRateDto.name} already exists`);
 
-    await this.ratesRepository.update(id, updateRateDto); 
-    return await this.ratesRepository.findOneBy({ id: id }); 
+    await this.ratesRepository.update(id, updateRateDto);
+    return await this.ratesRepository.findOneBy({ id: id });
   }
 
   async remove(id: number) {
