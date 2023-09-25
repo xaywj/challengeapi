@@ -1,4 +1,14 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+  Req,
+  NotAcceptableException,
+} from '@nestjs/common';
 import { RateService } from './rate.service';
 import { CreateRateDto } from './dto/create-rate.dto';
 import { UpdateRateDto } from './dto/update-rate.dto';
@@ -8,7 +18,10 @@ export class RateController {
   constructor(private readonly rateService: RateService) {}
 
   @Post()
-  create(@Body() createRateDto: CreateRateDto) {
+  create(@Req() req: any, @Body() createRateDto: CreateRateDto) {
+    // admin only
+    if (req.role != 'admin')
+      throw new NotAcceptableException('You are not allowed to do this action');
     return this.rateService.create(createRateDto);
   }
 
@@ -23,12 +36,22 @@ export class RateController {
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateRateDto: UpdateRateDto) {
+  update(
+    @Req() req: any,
+    @Param('id') id: string,
+    @Body() updateRateDto: UpdateRateDto,
+  ) {
+    // admin only
+    if (req.role != 'admin')
+      throw new NotAcceptableException('You are not allowed to do this action');
     return this.rateService.update(+id, updateRateDto);
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
+  remove(@Req() req:any, @Param('id') id: string) {
+    // admin only
+    if (req.role != 'admin')
+      throw new NotAcceptableException('You are not allowed to do this action');
     return this.rateService.remove(+id);
   }
 }
