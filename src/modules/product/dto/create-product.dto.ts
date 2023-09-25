@@ -12,4 +12,7 @@ export class CreateProductDto {
   @IsNotEmpty()
   @IsNumber()
   price: number;
+  
+  @IsString()
+  detail:string
 }

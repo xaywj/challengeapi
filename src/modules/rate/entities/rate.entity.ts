@@ -1,5 +1,5 @@
 import { Product } from 'src/modules/product/entities/product.entity';
-import { Column, Entity, OneToOne, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, OneToMany, OneToOne, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity('rate')
 export class Rate {
@@ -12,6 +12,6 @@ export class Rate {
   @Column({ type: 'float' })
   rate: number;
 
-  @OneToOne(() => Product, (product) => product.rate)
-  product: Product;
+  @OneToMany(() => Product, (product) => product.rate)
+  product: Product[];
 }

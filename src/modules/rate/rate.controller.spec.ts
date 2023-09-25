@@ -3,8 +3,7 @@ import { RateController } from './rate.controller';
 import { RateService } from './rate.service';
 
 describe('RateController', () => {
-  let controller: RateController;
-
+  let controller: RateController; 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       controllers: [RateController],
