@@ -32,7 +32,11 @@ export class ProductService {
   }
 
   async findOne(id: number) {
-    return await this.productRepository.findOneBy({ id: id });
+    return await this.productRepository
+      .createQueryBuilder('product')
+      .leftJoinAndSelect('product.rate', 'rate')
+      .where('product.id = :id', { id: id })
+      .getOne();
   }
 
   async update(id: number, updateProductDto: UpdateProductDto) {
