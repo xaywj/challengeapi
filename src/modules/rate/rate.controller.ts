@@ -20,7 +20,7 @@ export class RateController {
   @Post()
   create(@Req() req: any, @Body() createRateDto: CreateRateDto) {
     // admin only
-    if (req.role != 'admin')
+    if (req.user.role != 'admin')
       throw new NotAcceptableException('You are not allowed to do this action');
     return this.rateService.create(createRateDto);
   }
@@ -42,7 +42,7 @@ export class RateController {
     @Body() updateRateDto: UpdateRateDto,
   ) {
     // admin only
-    if (req.role != 'admin')
+    if (req.user.role != 'admin')
       throw new NotAcceptableException('You are not allowed to do this action');
     return this.rateService.update(+id, updateRateDto);
   }
@@ -50,7 +50,7 @@ export class RateController {
   @Delete(':id')
   remove(@Req() req:any, @Param('id') id: string) {
     // admin only
-    if (req.role != 'admin')
+    if (req.user.role != 'admin')
       throw new NotAcceptableException('You are not allowed to do this action');
     return this.rateService.remove(+id);
   }

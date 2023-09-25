@@ -30,7 +30,7 @@ export class AuthController {
     const token = await this.jwtService.signAsync(payload);
     return {
       token: this.jwtService.sign(payload),
-      user: user,
+      user: user, 
     };
   }
 }

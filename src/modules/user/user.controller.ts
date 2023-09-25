@@ -9,8 +9,8 @@ export class UserController {
   constructor(private readonly userService: UserService) {}
 
   @Post()
-  create(@Req() req: any, @Body() createUserDto: CreateUserDto) {  
-    if(!['admin', 'user'].includes(createUserDto.role)) throw new NotAcceptableException('role must be admin or user');
+  create(@Req() req: any, @Body() createUserDto: CreateUserDto) {   
+    if(!['admin', 'user'].includes(req.user.role)) throw new NotAcceptableException('role must be admin or user');
     // admin only
     if(req.role != 'admin') throw new NotAcceptableException('You are not allowed to do this action');
     return this.userService.create(createUserDto);
@@ -28,7 +28,8 @@ export class UserController {
 
   @Patch(':id')
   update(@Req() req: any, @Param('id') id: string, @Body() updateUserDto: UpdateUserDto) { 
-    if(!['admin', 'user'].includes(updateUserDto.role)) throw new NotAcceptableException('role must be admin or user');
+    
+    if(!['admin', 'user'].includes(req.user.role)) throw new NotAcceptableException('role must be admin or user');
     // admin only
     if(req.role != 'admin') throw new NotAcceptableException('You are not allowed to do this action');
     return this.userService.update(+id, updateUserDto);
@@ -36,7 +37,7 @@ export class UserController {
 
   @Delete(':id')
   remove(@Req() req: any, @Param('id') id: string) {
-    if(req.role != 'admin') throw new NotAcceptableException('You are not allowed to do this action');
+    if(req.user.role != 'admin') throw new NotAcceptableException('You are not allowed to do this action');
     return this.userService.remove(+id);
   }
 }
