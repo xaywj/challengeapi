@@ -3,6 +3,7 @@ import {
   Column,
   Entity,
   JoinColumn,
+  ManyToOne,
   OneToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm';
@@ -21,7 +22,7 @@ export class Product {
   @Column({ type: 'float' })
   price: number;
 
-  @OneToOne(() => Rate, (rate) => rate.product)
+  @ManyToOne(() => Rate, (rate) => rate.product, { cascade: true })
   @JoinColumn({ name: 'rate_id' })
   rate: Rate;
 }
