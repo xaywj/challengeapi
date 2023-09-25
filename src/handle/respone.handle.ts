@@ -17,6 +17,8 @@ export class Datarespone<T> implements NestInterceptor<T, Response<T>> {
     context: ExecutionContext,
     next: CallHandler,
   ): Observable<Response<T>> {
+    const res= context.switchToHttp().getResponse();
+    res.status(200); // custom status to 200 when success
     return next.handle().pipe(
       map((data) => ({
         data: data,
