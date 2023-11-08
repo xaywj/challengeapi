@@ -42,14 +42,14 @@ export class UserController {
     @Req() req: any,
     @Param('id') id: string,
     @Body() updateUserDto: UpdateUserDto,
-  ) {
+  ) { 
+
     if (!['admin', 'user'].includes(updateUserDto.role))
       throw new NotAcceptableException('role must be admin or user');
-    // admin only
-    if (req.user.role != 'admin')
+    // admin only 
+      if (req.user.role == 'admin') return this.userService.update(+id, updateUserDto);
       throw new NotAcceptableException('You are not allowed to do this action');
-    return this.userService.update(+id, updateUserDto);
-  }
+    }
 
   @Delete(':id')
   remove(@Req() req: any, @Param('id') id: string) {

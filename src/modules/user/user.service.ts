@@ -1,7 +1,7 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
-import { Repository } from 'typeorm';
+import { Repository, getRepository } from 'typeorm';
 import { User } from './entities/user.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import * as bcrypt from 'bcrypt';
@@ -28,7 +28,11 @@ export class UserService {
   }
 
   async findAll() {
-    return await this.userRepository.find();
+    // return await this.userRepository.find(); 
+    return await this.userRepository.createQueryBuilder('user')
+    .leftJoin('user.role', 'role')
+    .select(['user.id', 'user.username', 'user.name', 'role.name'])
+    .getMany();
   }
 
   async findOne(id: number) {
@@ -38,6 +42,7 @@ export class UserService {
   }
 
   async update(id: number, updateUserDto: UpdateUserDto) {
+    console.log('updateUserDto.password');
     // check if the user id exists in the table
     const user = await this.userRepository.findOneBy({ id: id });
     if (!user) throw new NotFoundException(`User #${id} not found`);
@@ -51,9 +56,18 @@ export class UserService {
       throw new NotFoundException(
         `User ${updateUserDto.username} already exists`,
       );
-     await this.userRepository.update(id, updateUserDto);
 
-     return user;
+    console.log(updateUserDto.password);
+
+    await this.userRepository.update(id, {
+      username: updateUserDto.username,
+      role: updateUserDto.role,
+      name: updateUserDto.name,
+      phone: updateUserDto.phone,
+      password: await bcrypt.hash(updateUserDto.password, 10)
+    });
+
+    return user;
   }
 
   async remove(id: number) {
