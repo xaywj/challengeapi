@@ -8,7 +8,10 @@ const configdatabase: TypeOrmModuleOptions = {
   username: configdb.db_user,
   password: configdb.db_password,
   database: configdb.db_name,
-  entities: [__dirname + '/**/*.entity{.ts,.js}'],
+  entities: [
+    __dirname + '/**/*.entity{.ts,.js}',
+    __dirname + '/**/**/*.entity{.ts,.js}'
+  ],
   synchronize: true,
 };
 
