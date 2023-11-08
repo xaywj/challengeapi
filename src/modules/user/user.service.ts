@@ -77,6 +77,14 @@ export class UserService {
     baseurl: string,
     ip: string,
   ) {
+    const user = await this.userRepository.findOneBy({
+      username: CreateRegisterDto.email,
+    });
+    if (user)
+      throw new NotFoundException(
+        `This email: ${CreateRegisterDto.email} already Registered`,
+      );
+
     return await this.userRepository.save({
       name: CreateRegisterDto.name,
       phone: CreateRegisterDto.phone,
