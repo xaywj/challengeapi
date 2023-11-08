@@ -1,10 +1,11 @@
 import { Rate } from 'src/modules/rate/entities/rate.entity';
+import { Orderdetail } from 'src/modules/orderdetail/entities/orderdetail.entity';
 import {
   Column,
   Entity,
   JoinColumn,
-  ManyToOne,
-  OneToOne,
+  ManyToOne, 
+  OneToMany,
   PrimaryGeneratedColumn,
 } from 'typeorm';
 
@@ -25,4 +26,7 @@ export class Product {
   @ManyToOne(() => Rate, (rate) => rate.product, { cascade: true })
   @JoinColumn({ name: 'rate_id' })
   rate: Rate;
+  
+  @OneToMany(() => Orderdetail, (orderdetail) => orderdetail.order) 
+  orderdetails: Orderdetail[];
 }

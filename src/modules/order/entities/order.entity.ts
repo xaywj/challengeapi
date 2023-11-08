@@ -25,10 +25,13 @@ export class Order {
   @UpdateDateColumn()
   updated_at: Date;
 
+  @Column({ type: 'integer' })
+  customer_id: number;
+
   @OneToMany(() => Orderdetail, (orderdetail) => orderdetail.order)
   orderdetails: Orderdetail[];
 
-  @ManyToOne(() => User, (user) => user.orders)
-  @JoinColumn({ name: 'customer_id' }) // Custom foreign key name
-  customer: User;
+  //   @ManyToOne(() => User, (user) => user.orders, { nullable: true })
+  //   @JoinColumn({ name: 'user_id' }) // Custom foreign key name
+  //   user: User;
 }
