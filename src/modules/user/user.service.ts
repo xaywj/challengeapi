@@ -1,7 +1,8 @@
+import { CreateRegisterDto } from './../register/dto/create-register.dto';
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
-import { Repository, getRepository } from 'typeorm';
+import { Repository } from 'typeorm';
 import { User } from './entities/user.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import * as bcrypt from 'bcrypt';
@@ -28,11 +29,7 @@ export class UserService {
   }
 
   async findAll() {
-    // return await this.userRepository.find(); 
-    return await this.userRepository.createQueryBuilder('user')
-    .leftJoin('user.role', 'role')
-    .select(['user.id', 'user.username', 'user.name', 'role.name'])
-    .getMany();
+    return await this.userRepository.find();
   }
 
   async findOne(id: number) {
@@ -42,7 +39,6 @@ export class UserService {
   }
 
   async update(id: number, updateUserDto: UpdateUserDto) {
-    console.log('updateUserDto.password');
     // check if the user id exists in the table
     const user = await this.userRepository.findOneBy({ id: id });
     if (!user) throw new NotFoundException(`User #${id} not found`);
@@ -57,14 +53,12 @@ export class UserService {
         `User ${updateUserDto.username} already exists`,
       );
 
-    console.log(updateUserDto.password);
-
     await this.userRepository.update(id, {
       username: updateUserDto.username,
       role: updateUserDto.role,
       name: updateUserDto.name,
       phone: updateUserDto.phone,
-      password: await bcrypt.hash(updateUserDto.password, 10)
+      password: await bcrypt.hash(updateUserDto.password, 10),
     });
 
     return user;
@@ -76,5 +70,30 @@ export class UserService {
     if (!user) throw new NotFoundException(`User #${id} not found`);
     await this.userRepository.delete(id);
     return true;
+  }
+
+  async register(
+    CreateRegisterDto: CreateRegisterDto,
+    baseurl: string,
+    ip: string,
+  ) {
+    const user = await this.userRepository.findOneBy({
+      username: CreateRegisterDto.email,
+    });
+    if (user)
+      throw new NotFoundException(
+        `This email: ${CreateRegisterDto.email} already Registered`,
+      );
+
+    return await this.userRepository.save({
+      name: CreateRegisterDto.name,
+      phone: CreateRegisterDto.phone,
+      email: CreateRegisterDto.email,
+      username: CreateRegisterDto.email,
+      password: await bcrypt.hash(CreateRegisterDto.password, 10),
+      ip: ip,
+      url: baseurl,
+      role: 'customer',
+    });
   }
 }
