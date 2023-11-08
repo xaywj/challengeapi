@@ -14,7 +14,7 @@ export class Jwtmiddleware implements CanActivate {
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
     const request = context.switchToHttp().getRequest();
-    if (request.route.path === '/auth/login') {
+    if (request.route.path === '/auth/login' || request.route.path === '/register') {
       return true;
     }
     const token = this.extractTokenFromHeader(request);

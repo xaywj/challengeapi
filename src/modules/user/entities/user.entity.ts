@@ -11,6 +11,9 @@ export class User {
   @Column()
   phone: string;
 
+  @Column({default:'null'})
+  email: string;
+
   @Column()
   role: string;
 
