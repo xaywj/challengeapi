@@ -5,6 +5,7 @@ import { UpdateOrderDto } from './dto/update-order.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Orderdetail } from '../orderdetail/entities/orderdetail.entity';
+import { PaymentOrderDto } from './dto/payment-order.dto';
 
 @Injectable()
 export class OrderService {
@@ -18,17 +19,17 @@ export class OrderService {
 
   async create(createOrderDto: Orderdetail[], @Req() req: any) {
     const orderdetail: Orderdetail[] = createOrderDto || [];
-    const order:Order = await this.OrderRepository.save({
+    const order: Order = await this.OrderRepository.save({
       customer_id: req.user.id, // This is Id for user login
       status: 'pending',
     });
-    const orderid= order.id;
-    
+    const orderid = order.id;
+
     orderdetail.length > 0 &&
       order?.id > 0 &&
       orderdetail.forEach(async (element) => {
         console.log(orderid);
-        
+
         await this.OrderdetailRepository.save({
           order_id: Number(orderid), // this is id for order
           product_id: element.product_id,
@@ -37,22 +38,14 @@ export class OrderService {
         });
       });
 
-    return { message: 'Order Created' };
+    return { message: 'Order Success!' };
   }
 
-  findAll() {
-    return `This action returns all order`;
-  }
-
-  findOne(id: number) {
-    return `This action returns a #${id} order`;
-  }
-
-  update(id: number, updateOrderDto: UpdateOrderDto) {
-    return `This action updates a #${id} order`;
-  }
-
-  remove(id: number) {
-    return `This action removes a #${id} order`;
+  async makepayment(paymentOrder: PaymentOrderDto, @Req() req: any) {
+    await this.OrderRepository.update(paymentOrder.order_id, {
+      status: 'paid',
+      updated_at: new Date()
+    });
+    return { message: 'Make Payment Success!' };
   }
 }
