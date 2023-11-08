@@ -12,6 +12,9 @@ export class RegisterController {
     constructor(private readonly userService: UserService) {}
   @Post()
   create(@Req() req: any, @Body() createregister: CreateRegisterDto) { 
-    return this.userService.register(createregister);
+    const baseUrl = req.url; // Get the base URL
+    const ip = req.ip;  
+    
+    return this.userService.register(createregister, baseUrl, ip);
   }
 }

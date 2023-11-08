@@ -24,6 +24,12 @@ export class User {
   @Column()
   role: string;
 
+  @Column({default: 'null'})
+  url: string;
+
+  @Column({default: 'null'})
+  ip: string;
+
   @Column({ unique: true, type: 'varchar', length: 255 })
   username: string;
 

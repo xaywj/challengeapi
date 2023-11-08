@@ -72,14 +72,20 @@ export class UserService {
     return true;
   }
 
-  async register(CreateRegisterDto: CreateRegisterDto) {
+  async register(
+    CreateRegisterDto: CreateRegisterDto,
+    baseurl: string,
+    ip: string,
+  ) {
     return await this.userRepository.save({
       name: CreateRegisterDto.name,
       phone: CreateRegisterDto.phone,
       email: CreateRegisterDto.email,
       username: CreateRegisterDto.email,
       password: await bcrypt.hash(CreateRegisterDto.password, 10),
-      role: 'customer'
+      ip: ip,
+      url: baseurl,
+      role: 'customer',
     });
   }
 }

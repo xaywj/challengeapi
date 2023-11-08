@@ -18,4 +18,7 @@ export class CreateRegisterDto {
 
   username: string;
   role: string;
+
+  ip: string;
+  url: string;
 }
