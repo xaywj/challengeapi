@@ -1,4 +1,5 @@
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { Order } from 'src/modules/order/entities/order.entity';
+import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity('user')
 export class User {
@@ -11,7 +12,7 @@ export class User {
   @Column()
   phone: string;
 
-  @Column({default:'null'})
+  @Column({ default: 'null' })
   email: string;
 
   @Column()
@@ -22,4 +23,7 @@ export class User {
 
   @Column()
   password: string;
+
+  @OneToMany(() => Order, (order) => order.customer)
+  orders: Order[];
 }
