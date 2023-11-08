@@ -13,6 +13,8 @@ import { secret } from './config/token';
 import { DataSource } from 'typeorm';
 import { ConfigModule } from '@nestjs/config';
 import { RegisterModule } from './modules/register/register.module';
+import { OrderModule } from './modules/order/order.module';
+import { OrderdetailModule } from './modules/orderdetail/orderdetail.module';
 
 @Module({
   imports: [
@@ -30,6 +32,8 @@ import { RegisterModule } from './modules/register/register.module';
       signOptions: { expiresIn: '1h' },
     }),
     RegisterModule,
+    OrderModule,
+    OrderdetailModule,
   ],
   controllers: [AppController],
   providers: [AppService],
